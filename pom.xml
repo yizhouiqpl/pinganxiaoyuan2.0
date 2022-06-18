@@ -11,6 +11,7 @@
         <module>cloud-pinganxiaoyuan-common</module>
         <module>cloud-zuoye-8101</module>
         <module>cloud-score-8102</module>
+        <module>cloud-zhifu-8103</module>
     </modules>
     <packaging>pom</packaging>
 
