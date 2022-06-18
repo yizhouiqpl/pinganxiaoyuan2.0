@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yizhouiqpl.mapper.ZuoyeMapper">
+
+    <resultMap id="BaseResultMap" type="cn.yizhouiqpl.entity.Zuoye">
+            <id property="zId" column="z_id" jdbcType="INTEGER"/>
+            <result property="zDesc" column="z_DESC" jdbcType="VARCHAR"/>
+            <result property="zFile" column="z_file" jdbcType="VARCHAR"/>
+            <result property="zCreatetime" column="z_createtime" jdbcType="TIMESTAMP"/>
+            <result property="zDeadline" column="z_deadline" jdbcType="TIMESTAMP"/>
+            <result property="zStatus" column="z_status" jdbcType="INTEGER"/>
+            <result property="zCid" column="z_cid" jdbcType="INTEGER"/>
+            <result property="zSubid" column="z_subid" jdbcType="INTEGER"/>
+            <result property="zTid" column="z_tid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        z_id,z_DESC,z_file,
+        z_createtime,z_deadline,z_status,
+        z_cid,z_subid,z_tid
+    </sql>
+    <select id="notifyList" resultType="cn.yizhouiqpl.entity.ZuoyeNotify">
+        select c.c_name, u.u_name, sub.sub_name, z.z_DESC, z.z_file, z.z_createtime, z.z_id
+        from student s, zuoye z, `subject` sub, teacher t, `user` u, class c
+        where z.z_subid = sub.sub_id and z.z_tid = t.t_id and t.t_uid = u.u_id and s.s_cid = c.c_id and z.z_cid = c.c_id
+        and z.z_status = 1 and s.s_id = #{sId} and TO_DAYS(z.z_createtime) = TO_DAYS(#{date});
+    </select>
+</mapper>

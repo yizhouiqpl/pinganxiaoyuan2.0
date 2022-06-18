@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yizhouiqpl.mapper.WorkMapper">
+
+    <resultMap id="BaseResultMap" type="cn.yizhouiqpl.entity.Work">
+            <id property="wId" column="w_id" jdbcType="INTEGER"/>
+            <result property="wDesc" column="w_DESC" jdbcType="VARCHAR"/>
+            <result property="wSubtime" column="w_subtime" jdbcType="TIMESTAMP"/>
+            <result property="wAudtime" column="w_audtime" jdbcType="TIMESTAMP"/>
+            <result property="wFile" column="w_file" jdbcType="VARCHAR"/>
+            <result property="wStatus" column="w_status" jdbcType="OTHER"/>
+            <result property="wSid" column="w_sid" jdbcType="INTEGER"/>
+            <result property="wZid" column="w_zid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        w_id,w_DESC,w_subtime,
+        w_audtime,w_file,w_status,
+        w_sid,w_zid
+    </sql>
+    <select id="notifyList" resultType="cn.yizhouiqpl.entity.ZuoyeNotify">
+        -- 查询当天的学生作业完成情况
+        select w.w_zid z_id, c.c_name, s.s_name, sub.sub_name, z.z_DESC, w.w_subtime, w.w_audtime, w.w_file, w.w_status, w.w_comment
+        from student s, `work` w, zuoye z, `subject` sub, teacher t, `user` u, class c
+        where s.s_id = w.w_sid and w.w_zid = z.z_id and z.z_subid = sub.sub_id and z.z_tid = t.t_id and t.t_uid = u.u_id and z.z_cid = c.c_id
+        and w.w_sid = #{sId} and TO_DAYS(z.z_createtime) &lt;= TO_DAYS(#{date}) and TO_DAYS(z.z_deadline) &gt;= TO_DAYS(#{date});
+        -- &lt; 小于 &lt;= 小于等于  &gt; 大于 &gt;= 大于等于
+    </select>
+    <select id="getSidByZid" resultType="java.lang.Integer">
+        select w_sid
+        from work
+        where w_zid = #{zId};
+    </select>
+    <select id="getWorkList" resultType="cn.yizhouiqpl.entity.WorkVO">
+        select w.*, s.s_name, sub.sub_name
+        from `work` w, student s, `subject` sub, (
+            select z.z_id, z.z_subid
+            from teacher t, zuoye z
+            where t.t_subid = z.z_subid and t.t_id = z.z_tid
+            and TO_DAYS(z.z_deadline) = TO_DAYS(#{date})
+        ) z
+        where w.w_zid = z.z_id and w.w_sid = s.s_id and z.z_subid = sub.sub_id
+        <if test="null != status">
+        and w.w_status = #{status}
+        </if>
+    </select>
+</mapper>

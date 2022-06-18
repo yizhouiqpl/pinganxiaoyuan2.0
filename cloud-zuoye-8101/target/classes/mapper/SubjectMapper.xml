@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yizhouiqpl.mapper.SubjectMapper">
+
+    <resultMap id="BaseResultMap" type="cn.yizhouiqpl.entity.Subject">
+            <id property="subId" column="sub_id" jdbcType="INTEGER"/>
+            <result property="subName" column="sub_name" jdbcType="VARCHAR"/>
+            <result property="subDesc" column="sub_DESC" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sub_id,sub_name,sub_DESC
+    </sql>
+</mapper>

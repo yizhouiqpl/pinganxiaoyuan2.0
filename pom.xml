@@ -8,7 +8,9 @@
     <artifactId>PingAnXiaoYuan</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>cloud-provider-zuoye-8101</module>
+        <module>cloud-pinganxiaoyuan-common</module>
+        <module>cloud-zuoye-8101</module>
+        <module>cloud-score-8102</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -63,7 +65,8 @@
                 <artifactId>druid</artifactId>
                 <version>${druid.version}</version>
             </dependency>
-            <dependency>                <groupId>org.mybatis.spring.boot</groupId>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.spring.boot.version}</version>
             </dependency>
@@ -98,6 +101,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

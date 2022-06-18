@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yizhouiqpl.mapper.ScoreMapper">
+
+    <resultMap id="BaseResultMap" type="cn.yizhouiqpl.entity.Score">
+            <id property="scId" column="sc_id" jdbcType="INTEGER"/>
+            <result property="scSid" column="sc_sid" jdbcType="INTEGER"/>
+            <result property="scEid" column="sc_eid" jdbcType="INTEGER"/>
+            <result property="scYuwen" column="sc_yuwen" jdbcType="DOUBLE"/>
+            <result property="scShuxue" column="sc_shuxue" jdbcType="DOUBLE"/>
+            <result property="scYingyu" column="sc_yingyu" jdbcType="DOUBLE"/>
+            <result property="scZhengzhi" column="sc_zhengzhi" jdbcType="DOUBLE"/>
+            <result property="scLishi" column="sc_lishi" jdbcType="DOUBLE"/>
+            <result property="scDili" column="sc_dili" jdbcType="DOUBLE"/>
+            <result property="scShengwu" column="sc_shengwu" jdbcType="DOUBLE"/>
+            <result property="scTotal" column="sc_total" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sc_id,sc_sid,sc_eid,
+        sc_yuwen,sc_shuxue,sc_yingyu,
+        sc_zhengzhi,sc_lishi,sc_dili,
+        sc_shengwu,sc_total
+    </sql>
+    <select id="getAverageScore" resultType="cn.yizhouiqpl.entity.ScoreVO">
+        select c.c_name, SUM(sc.sc_total)/(COUNT(1) * 7) sc_avg, AVG(sc.sc_yuwen) sc_yuwen, AVG(sc.sc_shuxue) sc_shuxue, AVG(sc.sc_yingyu),
+        AVG(sc.sc_zhengzhi) sc_zhengzhi, AVG(sc.sc_dili) sc_dili, AVG(sc.sc_lishi) sc_lishi, AVG(sc.sc_shengwu) sc_shengwu, e.e_name
+        from student s, class c, exam e, score sc
+        where s.s_cid = c.c_id and s.s_id = sc.sc_sid and sc.sc_eid = e.e_id
+        and c.c_id = #{cId} and e.e_id = #{eId}
+    </select>
+    <select id="getScoreByCId" resultType="cn.yizhouiqpl.entity.ScoreVO">
+        -- 显示学生全部的成绩
+        select s.s_id, s.s_name, sc.sc_yuwen, sc.sc_shuxue, sc.sc_yingyu, sc.sc_zhengzhi, sc.sc_lishi, sc.sc_dili, sc.sc_shengwu, sc.sc_total
+        from student s, class c, exam e, score sc
+        where s.s_cid = c.c_id and s.s_id = sc.sc_sid and sc.sc_eid = e.e_id
+        and e.e_id = #{eId} and c.c_id = #{cId}
+    </select>
+    <select id="getTotalScore" resultType="cn.yizhouiqpl.entity.ScoreVO">
+        select s.s_id, s.s_name, c.c_name, sc.sc_total
+        from student s, class c, exam e, score sc
+        where s.s_cid = c.c_id and s.s_id = sc.sc_sid and sc.sc_eid = e.e_id
+        and c.c_id = #{cId} and e.e_id = #{eId}
+    </select>
+    <select id="getAssignedGrade" resultType="cn.yizhouiqpl.entity.ScoreVO">
+        select s.s_id, s.s_name, c.c_name, e.e_name, ${subject}  -- 为什么 ${} 可以实现指定字段的查询，而 #{} 不可以
+        from student s, class c, exam e, score sc
+        where s.s_cid = c.c_id and s.s_id = sc.sc_sid and sc.sc_eid = e.e_id
+    </select>
+</mapper>
